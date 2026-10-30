@@ -1,21 +1,27 @@
 server:
   port: 8082
 
-#spring:
-#  application:
-#    name: employee-service
-#  datasource:
-#    url: jdbc:postgresql://localhost:5432/employee_db
-#    username: root
-#    password: pass123
-#  jpa:
-#    hibernate:
-#      ddl-auto: validate
-#    show-sql: true
-#  flyway:
-#    enabled: true
-#
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
+spring:
+  application:
+    name: employee-service
+  datasource:
+    url: jdbc:postgresql://localhost:5432/hrms_demo
+    username: postgres
+    password: pass123
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: hrms
+  flyway:
+    enabled: true
+    schemas: hrms
+    default-schema: hrms
+    create-schemas: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
