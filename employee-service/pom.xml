@@ -57,11 +57,15 @@
             <artifactId>flyway-database-postgresql</artifactId>
         </dependency>
 
-       <!--  Eureka Client 
+      <!--   Eureka Client -->  
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-        </dependency>-->
+        </dependency>
+        
+        
+        
+       
 
         <!-- Validation -->
         <dependency>
