@@ -8,7 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/hrms_auth_db
     username: postgres
-    password: "123456"
+    password: 123456
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -22,14 +22,16 @@ spring:
     default-schema: auth
     schemas: auth
 
-# eureka:
-#   client:
-#     service-url:
-#       defaultZone: ${EUREKA_SERVER_URL:http://localhost:8761/eureka/}
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
 
 security:
   jwt:
-    secret: XcFFnNXwgdd3Q773Eim1CjffMsDoTzcvf7eY5j+y+vs
+    secret: ${JWT_SECRET}
     expiration-ms: 3600000
 
 logging:
