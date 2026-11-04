@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: hrms-api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # Auth Service Route
+        - id: auth-service
+          uri: lb://hrms-auth-service
+          predicates:
+            - Path=/api/auth/**
+
+        # Employee Service Route
+        - id: employee-service
+          uri: lb://hrms-employee-service
+          predicates:
+            - Path=/api/employees/**
+
+eureka:
+  instance:
+    prefer-ip-address: true
+
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
