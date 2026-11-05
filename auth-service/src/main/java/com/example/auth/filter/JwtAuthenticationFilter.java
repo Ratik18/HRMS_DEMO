@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter  {
 
 	    public JwtAuthenticationFilter(
 	            @Value("${security.jwt.secret}") String secret) {
-
+	    	  System.out.println("JWT secret length: " + secret.length());
+	    	    System.out.println("JWT secret contains underscore: " + secret.contains("_"));
 	        byte[] keyBytes = Decoders.BASE64.decode(secret);
 	        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
 	    }
