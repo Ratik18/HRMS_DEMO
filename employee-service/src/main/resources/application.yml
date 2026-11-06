@@ -6,10 +6,11 @@ spring:
     name: employee-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/hrms_demo
+    url: jdbc:postgresql://localhost:5433/hrms_demo
     username: postgres
-    password: Bhumi@570
+    password: Subha@123
     driver-class-name: org.postgresql.Driver
+
 
   jpa:
     hibernate:
@@ -25,6 +26,12 @@ spring:
     default-schema: hrms
     create-schemas: true
 
+
+#eureka:
+#  client:
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka
+
 eureka:
   client:
     service-url:
@@ -34,3 +41,4 @@ eureka:
 
   instance:
     prefer-ip-address: true
+
