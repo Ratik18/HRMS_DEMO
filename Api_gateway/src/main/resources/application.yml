@@ -1,34 +1,3 @@
-#server:
-#  port: 8080
-#
-#spring:
-#  application:
-#    name: hrms-api-gateway
-#
-#  cloud:
-#    gateway:
-#      routes:
-#        # Auth Service Route
-#        - id: auth-service
-#          uri: lb://hrms-auth-service
-#          predicates:
-#            - Path=/api/auth/**
-#
-#        # Employee Service Route
-#        - id: employee-service
-#          uri: lb://hrms-employee-service
-#          predicates:
-#            - Path=/api/employees/**					
-#												
-#eureka:
-#  instance:
-#    prefer-ip-address: true
-#
-#  client:
-#    register-with-eureka: true
-#    fetch-registry: true
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka/
 server:
   port: 8080
 
@@ -38,42 +7,37 @@ spring:
 
   cloud:
     gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://hrms-auth-service
+              predicates:
+                - Path=/api/auth/**
 
-      # CORS Configuration
-      globalcors:
-        add-to-simple-url-handler-mapping: true
-        cors-configurations:
-          '[/**]':
-            allowedOrigins:
-              - "http://localhost:5173"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - PATCH
-              - DELETE
-              - OPTIONS
-            allowedHeaders:
-              - "*"
-            allowCredentials: false
-            maxAge: 3600
+            - id: employees
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/employees/**
 
-      # API Gateway Routes
-      routes:
-        - id: auth-service
-          uri: lb://hrms-auth-service
-          predicates:
-            - Path=/api/auth/**
+            - id: departments
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/departments/**
 
-        - id: employee-service
-          uri: lb://hrms-employee-service
-          predicates:
-            - Path=/api/employees/**
+            - id: designations
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/designations/**
+
+            - id: onboarding
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/onboarding/**
 
 eureka:
   instance:
     prefer-ip-address: true
-
   client:
     register-with-eureka: true
     fetch-registry: true

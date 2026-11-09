@@ -93,6 +93,7 @@
 </dependency>-->
 
 
+
 <!-- Flyway Migration -->
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -100,12 +101,6 @@
 </dependency>
 
 <!-- PostgreSQL support for Flyway -->
-<dependency>
-    <groupId>org.flywaydb</groupId>
-    <artifactId>flyway-database-postgresql</artifactId>
-</dependency>
-
-
 <dependency>
     <groupId>org.flywaydb</groupId>
     <artifactId>flyway-database-postgresql</artifactId>
