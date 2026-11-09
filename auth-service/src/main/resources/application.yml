@@ -9,7 +9,7 @@ spring:
     url: jdbc:postgresql://localhost:5433/hrms_auth_db
     username: postgres
 
-    password: Bhumi@570
+    password: Subha@123
 
  
 
