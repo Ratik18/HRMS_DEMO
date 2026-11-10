@@ -1,3 +1,4 @@
+
 server:
   port: 8080
 
@@ -5,8 +6,7 @@ spring:
   application:
     name: hrms-api-gateway
 
-  cloud:
-    gateway:
+  cloude:
       server:
         webmvc:
           routes:
@@ -24,6 +24,30 @@ spring:
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/departments/**
+
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: false
+            maxAge: 3600
+
+      routes:
+        - id: auth-service
+          uri: lb://hrms-auth-service
+          predicates:
+            - Path=/api/auth/**
 
             - id: designations
               uri: lb://hrms-employee-service
