@@ -1,7 +1,11 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> origin/feature/sabyasachi-employee-service
+=======
+
+>>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
 server:
   port: 8080
 
@@ -9,9 +13,31 @@ spring:
   application:
     name: hrms-api-gateway
 
+<<<<<<< HEAD
   cloud:
     gateway:
 <<<<<<< HEAD
+=======
+  cloude:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://hrms-auth-service
+              predicates:
+                - Path=/api/auth/**
+
+            - id: employees
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/employees/**
+
+            - id: departments
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/departments/**
+
+>>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
@@ -35,6 +61,7 @@ spring:
           uri: lb://hrms-auth-service
           predicates:
             - Path=/api/auth/**
+<<<<<<< HEAD
 =======
       server:
         webmvc:
@@ -54,6 +81,8 @@ spring:
               predicates:
                 - Path=/api/departments/**
 >>>>>>> origin/feature/sabyasachi-employee-service
+=======
+>>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
 
             - id: designations
               uri: lb://hrms-employee-service
