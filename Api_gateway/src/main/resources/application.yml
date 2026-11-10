@@ -13,30 +13,39 @@ spring:
   application:
     name: hrms-api-gateway
 
+<<<<<<< Updated upstream
 <<<<<<< HEAD
   cloud:
     gateway:
 <<<<<<< HEAD
 =======
   cloude:
+=======
+  cloud:
+    gateway:
+>>>>>>> Stashed changes
       server:
         webmvc:
           routes:
+            # Auth Service
             - id: auth-service
               uri: lb://hrms-auth-service
               predicates:
                 - Path=/api/auth/**
 
-            - id: employees
+            # Employee Service
+            - id: employee-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/employees/**
 
-            - id: departments
+            # Department Service
+            - id: department-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/departments/**
 
+<<<<<<< Updated upstream
 >>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
       globalcors:
         add-to-simple-url-handler-mapping: true
@@ -85,11 +94,16 @@ spring:
 >>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
 
             - id: designations
+=======
+            # Designation Service
+            - id: designation-service
+>>>>>>> Stashed changes
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/designations/**
 
-            - id: onboarding
+            # Onboarding Service
+            - id: onboarding-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/onboarding/**
@@ -97,6 +111,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
+
   client:
     register-with-eureka: true
     fetch-registry: true
