@@ -7,23 +7,37 @@ spring:
 
   cloud:
     gateway:
-      routes:
-        # Auth Service Route
-        - id: auth-service
-          uri: lb://hrms-auth-service
-          predicates:
-            - Path=/api/auth/**
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://hrms-auth-service
+              predicates:
+                - Path=/api/auth/**
 
-        # Employee Service Route
-        - id: employee-service
-          uri: lb://hrms-employee-service
-          predicates:
-            - Path=/api/employees/**
+            - id: employees
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/employees/**
+
+            - id: departments
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/departments/**
+
+            - id: designations
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/designations/**
+
+            - id: onboarding
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/onboarding/**
 
 eureka:
   instance:
     prefer-ip-address: true
-
   client:
     register-with-eureka: true
     fetch-registry: true
