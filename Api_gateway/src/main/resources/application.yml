@@ -6,8 +6,25 @@ spring:
   application:
     name: hrms-api-gateway
 
-  cloud:
-    gateway:
+  cloude:
+      server:
+        webmvc:
+          routes:
+            - id: auth-service
+              uri: lb://hrms-auth-service
+              predicates:
+                - Path=/api/auth/**
+
+            - id: employees
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/employees/**
+
+            - id: departments
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/departments/**
+
       globalcors:
         add-to-simple-url-handler-mapping: true
         cors-configurations:
@@ -32,10 +49,15 @@ spring:
           predicates:
             - Path=/api/auth/**
 
-        - id: employee-service
-          uri: lb://hrms-employee-service
-          predicates:
-            - Path=/api/employees/**
+            - id: designations
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/designations/**
+
+            - id: onboarding
+              uri: lb://hrms-employee-service
+              predicates:
+                - Path=/api/onboarding/**
 
 eureka:
   instance:
