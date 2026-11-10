@@ -8,23 +8,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT:5433}/hrms_auth_db
     username: postgres
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-<<<<<<< HEAD
-
     password: Subha@123
-
- 
-
-=======
-    password: pass123
->>>>>>> origin/feature/sabyasachi-employee-service
-=======
-    password: pass123
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-=======
-    password: Subha@123
->>>>>>> Stashed changes
     driver-class-name: org.postgresql.Driver
 
   jpa:

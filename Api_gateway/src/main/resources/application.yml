@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/feature/sabyasachi-employee-service
-=======
-
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
 server:
   port: 8080
 
@@ -13,20 +6,12 @@ spring:
   application:
     name: hrms-api-gateway
 
-<<<<<<< Updated upstream
-<<<<<<< HEAD
   cloud:
     gateway:
-<<<<<<< HEAD
-=======
-  cloude:
-=======
-  cloud:
-    gateway:
->>>>>>> Stashed changes
       server:
         webmvc:
           routes:
+
             # Auth Service
             - id: auth-service
               uri: lb://hrms-auth-service
@@ -45,59 +30,8 @@ spring:
               predicates:
                 - Path=/api/departments/**
 
-<<<<<<< Updated upstream
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-      globalcors:
-        add-to-simple-url-handler-mapping: true
-        cors-configurations:
-          '[/**]':
-            allowedOrigins:
-              - "http://localhost:5173"
-            allowedMethods:
-              - GET
-              - POST
-              - PUT
-              - PATCH
-              - DELETE
-              - OPTIONS
-            allowedHeaders:
-              - "*"
-            allowCredentials: false
-            maxAge: 3600
-
-      routes:
-        - id: auth-service
-          uri: lb://hrms-auth-service
-          predicates:
-            - Path=/api/auth/**
-<<<<<<< HEAD
-=======
-      server:
-        webmvc:
-          routes:
-            - id: auth-service
-              uri: lb://hrms-auth-service
-              predicates:
-                - Path=/api/auth/**
-
-            - id: employees
-              uri: lb://hrms-employee-service
-              predicates:
-                - Path=/api/employees/**
-
-            - id: departments
-              uri: lb://hrms-employee-service
-              predicates:
-                - Path=/api/departments/**
->>>>>>> origin/feature/sabyasachi-employee-service
-=======
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-
-            - id: designations
-=======
             # Designation Service
             - id: designation-service
->>>>>>> Stashed changes
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/designations/**

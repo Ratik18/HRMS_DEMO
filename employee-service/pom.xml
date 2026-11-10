@@ -2,28 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
-<<<<<<< HEAD
-<<<<<<< HEAD
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>4.1.2</version>
         <relativePath/>
     </parent>
-=======
-=======
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.1.2</version>
-		<relativePath/>
-	</parent>
-<<<<<<< HEAD
->>>>>>> origin/feature/sabyasachi-employee-service
-=======
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
+
+
 
 	<groupId>com.hrms</groupId>
 	<artifactId>employee-service</artifactId>
@@ -32,27 +18,13 @@
 	<name>employee-service</name>
 	<description>HRMS Employee Service</description>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
+
    <properties>
     <java.version>21</java.version>
     <spring-cloud.version>2025.1.4</spring-cloud.version>
 </properties>
-    <dependencies>
-=======
-=======
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-	<properties>
-		<java.version>21</java.version>
-		<spring-cloud.version>2025.1.4</spring-cloud.version>
-	</properties>
 
-	<dependencies>
-<<<<<<< HEAD
->>>>>>> origin/feature/sabyasachi-employee-service
-=======
->>>>>>> 5bb45634e260bfdaa2a2af382310c35d79178baa
-
+<dependencies>
 		<!-- Spring Web MVC (renamed in Boot 4) -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
