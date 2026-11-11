@@ -1,0 +1,54 @@
+
+server:
+  port: 8083
+
+spring:
+  application:
+    name: hrms-attendance-service
+
+  # PostgreSQL Database Configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5433/hrms_demo
+    username: postgres
+    password: Subha@123
+    driver-class-name: org.postgresql.Driver
+
+  # JPA Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: attendance
+        format_sql: true
+
+  # Flyway Database Migration
+  flyway:
+    enabled: true
+    default-schema: attendance
+    schemas: attendance
+    create-schemas: true
+    locations: classpath:db/migration
+
+# Eureka Client Configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+  endpoint:
+    health:
+      show-details: always
