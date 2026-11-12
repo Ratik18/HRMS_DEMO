@@ -8,7 +8,6 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_auth_db
     username: postgres
-
     password: Hitesh@2001
 
     driver-class-name: org.postgresql.Driver
@@ -27,6 +26,8 @@ spring:
     default-schema: auth
     schemas: auth
     create-schemas: true
+    baseline-on-migrate: true
+    baseline-version: 0
 
 eureka:
   client:
@@ -37,7 +38,6 @@ eureka:
 
 security:
   jwt:
-
     secret: "hKHbP+/zvRdA56wr0aRBj6QRobcUFq9aD2URioeIxFY="
     expiration-ms: 3600000
 
@@ -46,4 +46,5 @@ logging:
     org.springframework.security: DEBUG
 
  
+
 
