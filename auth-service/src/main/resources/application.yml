@@ -6,9 +6,11 @@ spring:
     name: hrms-auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_auth_db
+    url: jdbc:postgresql://localhost:${DB_PORT:5433}/hrms_auth_db
     username: postgres
+
     password: Hitesh@2001
+
     driver-class-name: org.postgresql.Driver
 
   jpa:
