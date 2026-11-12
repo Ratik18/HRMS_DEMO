@@ -6,7 +6,7 @@ spring:
     name: hrms-auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5433}/hrms_auth_db
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_auth_db
     username: postgres
 
     password: Hitesh@2001
@@ -45,6 +45,5 @@ logging:
   level:
     org.springframework.security: DEBUG
 
-    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
-    expiration-ms: 3600000
+ 
 

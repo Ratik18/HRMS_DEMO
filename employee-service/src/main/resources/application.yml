@@ -6,7 +6,7 @@ spring:
     name: hrms-employee-service
 
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5433}/hrms_demo
+    url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_demo
     username: postgres
 
     password: Hitesh@2001
