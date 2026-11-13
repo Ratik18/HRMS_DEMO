@@ -25,8 +25,6 @@ spring:
     default-schema: auth
     schemas: auth
     create-schemas: true
-    baseline-on-migrate: true
-    baseline-version: 0
 
 eureka:
   client:
@@ -37,5 +35,5 @@ eureka:
 
 security:
   jwt:
-    secret: FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y=
+    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
     expiration-ms: 3600000
