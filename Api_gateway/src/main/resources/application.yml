@@ -1,3 +1,4 @@
+
 server:
   port: 8080
 
@@ -10,27 +11,33 @@ spring:
       server:
         webmvc:
           routes:
+
+            # Auth Service
             - id: auth-service
               uri: lb://hrms-auth-service
               predicates:
                 - Path=/api/auth/**
 
-            - id: employees
+            # Employee Service
+            - id: employee-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/employees/**
 
-            - id: departments
+            # Department Service
+            - id: department-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/departments/**
 
-            - id: designations
+            # Designation Service
+            - id: designation-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/designations/**
 
-            - id: onboarding
+            # Onboarding Service
+            - id: onboarding-service
               uri: lb://hrms-employee-service
               predicates:
                 - Path=/api/onboarding/**
@@ -38,6 +45,7 @@ spring:
 eureka:
   instance:
     prefer-ip-address: true
+
   client:
     register-with-eureka: true
     fetch-registry: true

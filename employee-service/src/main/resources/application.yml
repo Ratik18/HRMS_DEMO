@@ -1,3 +1,4 @@
+
 server:
   port: 8082
 
@@ -8,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_demo
     username: postgres
-    password: pass123
+    password: "1234"
     driver-class-name: org.postgresql.Driver
 
   jpa:
