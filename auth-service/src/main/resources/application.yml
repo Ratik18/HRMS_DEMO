@@ -26,8 +26,6 @@ spring:
     default-schema: auth
     schemas: auth
     create-schemas: true
-    baseline-on-migrate: true
-    baseline-version: 0
 
 eureka:
   client:
