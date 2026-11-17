@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Bell, Building2, ChevronDown, ClipboardCheck, LayoutDashboard, LogOut,
   Menu, Network, Search, Users, X, BriefcaseBusiness,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { initials } from '../utils/format';
+
 
 const navigation = [
   { label: 'Overview', to: '/', icon: LayoutDashboard, end: true },
@@ -39,9 +40,11 @@ export default function AppLayout() {
       {mobileOpen && <button className="mobile-scrim" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
         <div className="brand-row">
+        <Link to="/login" className="brand-link" title="Go to login page">
           <div className="brand-logo-card"><img src="/linfoi-logo.png" alt="Linfoi" /></div>
           <div className="brand-copy"><strong>LINFOI</strong><small>HR MANAGEMENT</small></div>
-          <button className="mobile-close icon-button" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={18} /></button>
+        </Link>
+        <button className="mobile-close icon-button" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={18} /></button>
         </div>
         <div className="workspace-label">WORKSPACE</div>
         <nav className="side-nav">

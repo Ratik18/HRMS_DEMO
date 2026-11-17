@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, Network, ShieldCheck, UsersRound } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck, UsersRound } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getApiError } from '../services/api';
 import { Alert } from '../components/Feedback';
@@ -36,8 +36,11 @@ export default function LoginPage() {
     <div className="login-screen">
       <div className="login-visual">
         <div className="login-brand">
-          <div className="brand-logo-card"><img src="/linfoi-logo.png" alt="Linfoi" /></div>
-          <div className="brand-copy"><strong>LINFOI</strong><small>HR MANAGEMENT</small></div>        </div>
+          <Link to="/login" className="brand-link" title="Go to login page">
+            <div className="brand-logo-card"><img src="/linfoi-logo.png" alt="Linfoi" /></div>
+            <div className="brand-copy"><strong>LINFOI</strong><small>HR MANAGEMENT</small></div>
+          </Link>
+        </div>
         <div className="login-visual-content">
           <div className="visual-kicker"><span /> PEOPLE. PROGRESS. POSSIBILITY.</div>
           <h1>Great teams<br />start with <em>great</em><br />people practices.</h1>
