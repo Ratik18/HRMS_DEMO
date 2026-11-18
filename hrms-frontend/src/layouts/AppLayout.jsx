@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import {
   Bell, Building2, ChevronDown, ClipboardCheck, LayoutDashboard, LogOut,
   Menu, Network, Search, Users, X, BriefcaseBusiness,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { initials } from '../utils/format';
+
 
 const navigation = [
   { label: 'Overview', to: '/', icon: LayoutDashboard, end: true },
@@ -39,9 +40,11 @@ export default function AppLayout() {
       {mobileOpen && <button className="mobile-scrim" aria-label="Close navigation" onClick={() => setMobileOpen(false)} />}
       <aside className={`sidebar ${mobileOpen ? 'sidebar-open' : ''}`}>
         <div className="brand-row">
-          <div className="brand-mark"><Network size={21} strokeWidth={2.4} /></div>
-          <div className="brand-copy"><strong>people<span>flow</span></strong><small>HR MANAGEMENT</small></div>
-          <button className="mobile-close icon-button" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={18} /></button>
+        <Link to="/login" className="brand-link" title="Go to login page">
+          <div className="brand-logo-card"><img src="/linfoi-logo.png" alt="Linfoi" /></div>
+          <div className="brand-copy"><strong>LINFOI</strong><small>HR MANAGEMENT</small></div>
+        </Link>
+        <button className="mobile-close icon-button" onClick={() => setMobileOpen(false)} aria-label="Close menu"><X size={18} /></button>
         </div>
         <div className="workspace-label">WORKSPACE</div>
         <nav className="side-nav">
@@ -81,9 +84,9 @@ export default function AppLayout() {
           </div>
         </header>
         <div className="page-content">
-          <div className="page-heading"><div><div className="eyebrow">PEOPLE OPERATIONS</div><h1>{meta[0]}</h1><p>{meta[1]}</p></div><div className="heading-decoration"><div className="decoration-dot dot-one"/><div className="decoration-dot dot-two"/><div className="decoration-dot dot-three"/></div></div>
+          <div className="page-heading"><div><div className="eyebrow">LINFOI HRMS</div><h1>{meta[0]}</h1><p>{meta[1]}</p></div><div className="heading-decoration"><div className="decoration-dot dot-one"/><div className="decoration-dot dot-two"/><div className="decoration-dot dot-three"/></div></div>
           <Outlet />
-          <footer className="app-footer"><span>Peopleflow HRMS</span><span>People operations, made clearer.</span></footer>
+          <footer className="app-footer"><span>LINFOI HRMS</span><span>We Staff the Minds Behind the Machines.</span></footer>
         </div>
       </main>
     </div>
