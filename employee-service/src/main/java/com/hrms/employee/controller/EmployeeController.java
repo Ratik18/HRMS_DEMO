@@ -1,4 +1,7 @@
+
 package com.hrms.employee.controller;
+
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -8,12 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import com.hrms.employee.model.Employee;
 import com.hrms.employee.model.EmploymentStatus;
 import com.hrms.employee.service.EmployeeService;
-import com.hrms.employee.model.Department;
-import com.hrms.employee.model.Designation;
-
-
-
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/employees")
@@ -119,6 +116,18 @@ public class EmployeeController {
         Page<Employee> employees =
                 employeeService.getEmployeesByStatus(
                         status, page, size);
+
+        return ResponseEntity.ok(employees);
+    }
+
+    // Get Employees with Pagination
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<Employee>> getEmployees(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Page<Employee> employees =
+                employeeService.getAllEmployees(page, size);
 
         return ResponseEntity.ok(employees);
     }

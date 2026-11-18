@@ -9,7 +9,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5433/hrms_attendance
     username: postgres
-    password: Subha@123
+    password: Bhumi@570
     driver-class-name: org.postgresql.Driver
 
   # JPA Configuration
