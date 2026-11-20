@@ -1,25 +1,16 @@
 package com.example.leave.repository;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.example.leave.model.LeaveType;
 
-import org.springframework.stereotype.Repository;
-
 @Repository
-public interface LeaveTypeRepository extends JpaRepository<LeaveType, Long> { 
-	
-
-    List<LeaveType> findByActiveTrue();
+public interface LeaveTypeRepository extends JpaRepository<LeaveType, UUID> {
 
     Optional<LeaveType> findByNameIgnoreCase(String name);
-	
-	
-	
-	
 
 }
