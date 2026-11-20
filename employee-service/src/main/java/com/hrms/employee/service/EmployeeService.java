@@ -1,4 +1,7 @@
+
 package com.hrms.employee.service;
+
+import java.util.Optional;
 
 import com.hrms.employee.model.Employee;
 import com.hrms.employee.model.Department;
@@ -16,8 +19,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 @Service
 @Transactional
 public class EmployeeService {
@@ -26,6 +27,7 @@ public class EmployeeService {
     private final DepartmentRepository departmentRepository;
     private final DesignationRepository designationRepository;
 
+    // Constructor Injection
     public EmployeeService(
             EmployeeRepository employeeRepository,
             DepartmentRepository departmentRepository,
@@ -94,6 +96,7 @@ public class EmployeeService {
 
         if (employeeWithEmail.isPresent()
                 && !employeeWithEmail.get().getId().equals(id)) {
+
             throw new RuntimeException("Email already exists");
         }
 
@@ -128,7 +131,7 @@ public class EmployeeService {
         employeeRepository.delete(employee);
     }
 
-    // Get Employees By Department
+    // Get Employees By Department with Pagination
     @Transactional(readOnly = true)
     public Page<Employee> getEmployeesByDepartment(
             Long departmentId, int page, int size) {
@@ -139,7 +142,7 @@ public class EmployeeService {
                 departmentId, pageable);
     }
 
-    // Get Employees By Status
+    // Get Employees By Status with Pagination
     @Transactional(readOnly = true)
     public Page<Employee> getEmployeesByStatus(
             EmploymentStatus status, int page, int size) {

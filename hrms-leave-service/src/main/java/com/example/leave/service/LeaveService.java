@@ -1,9 +1,11 @@
+
 package com.example.leave.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,19 +29,18 @@ public class LeaveService {
 
     // Apply for a new leave
     public LeaveResponse applyForLeave(
-            Long employeeId,
+            UUID employeeId,
             LeaveApplicationRequest request) {
 
-        if (employeeId == null || employeeId <= 0) {
-            throw new LeaveException("Invalid employee ID");
+        validateEmployeeId(employeeId);
+
+        if (request == null) {
+            throw new LeaveException("Leave application details are required");
         }
 
         validateLeaveDates(request.startDate(), request.endDate());
 
-        // Check if the leave type exists.
-        // Ravi's LeaveTypeRepository validation will be integrated
-        // once his repository class is available.
-
+        // Check whether the employee already has an overlapping request.
         List<LeaveStatus> overlappingStatuses = List.of(
                 LeaveStatus.PENDING,
                 LeaveStatus.APPROVED
@@ -83,11 +84,9 @@ public class LeaveService {
 
     // Get all leave requests belonging to an employee
     @Transactional(readOnly = true)
-    public List<LeaveResponse> getMyLeaves(Long employeeId) {
+    public List<LeaveResponse> getMyLeaves(UUID employeeId) {
 
-        if (employeeId == null || employeeId <= 0) {
-            throw new LeaveException("Invalid employee ID");
-        }
+        validateEmployeeId(employeeId);
 
         return leaveRequestRepository
                 .findByEmployeeIdOrderByCreatedAtDesc(employeeId)
@@ -99,8 +98,14 @@ public class LeaveService {
     // Get a specific leave request belonging to an employee
     @Transactional(readOnly = true)
     public LeaveResponse getMyLeaveById(
-            Long leaveId,
-            Long employeeId) {
+            UUID leaveId,
+            UUID employeeId) {
+
+        validateEmployeeId(employeeId);
+
+        if (leaveId == null) {
+            throw new LeaveException("Invalid leave request ID");
+        }
 
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findByIdAndEmployeeId(leaveId, employeeId)
@@ -128,8 +133,14 @@ public class LeaveService {
 
     // Cancel a pending leave request
     public LeaveResponse cancelLeave(
-            Long leaveId,
-            Long employeeId) {
+            UUID leaveId,
+            UUID employeeId) {
+
+        validateEmployeeId(employeeId);
+
+        if (leaveId == null) {
+            throw new LeaveException("Invalid leave request ID");
+        }
 
         LeaveRequest leaveRequest = leaveRequestRepository
                 .findByIdAndEmployeeId(leaveId, employeeId)
@@ -149,6 +160,14 @@ public class LeaveService {
                 leaveRequestRepository.save(leaveRequest);
 
         return convertToResponse(updatedRequest);
+    }
+
+    // Validate employee ID
+    private void validateEmployeeId(UUID employeeId) {
+
+        if (employeeId == null) {
+            throw new LeaveException("Invalid employee ID");
+        }
     }
 
     // Validate leave dates
@@ -182,8 +201,7 @@ public class LeaveService {
 
         long days = ChronoUnit.DAYS.between(startDate, endDate) + 1;
 
-        return BigDecimal.valueOf(days)
-                .setScale(2);
+        return BigDecimal.valueOf(days).setScale(2);
     }
 
     // Convert entity into response DTO
@@ -191,7 +209,7 @@ public class LeaveService {
             LeaveRequest leaveRequest) {
 
         return new LeaveResponse(
-                leaveRequest.getId(),
+        		leaveRequest.getId(),
                 leaveRequest.getEmployeeId(),
                 leaveRequest.getLeaveTypeId(),
                 leaveRequest.getStartDate(),
@@ -206,4 +224,3 @@ public class LeaveService {
         );
     }
 }
-

@@ -1,6 +1,8 @@
+
 package com.example.leave.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +40,7 @@ public class LeaveController {
             @Valid @RequestBody LeaveApplicationRequest request,
             Authentication authentication) {
 
-        Long employeeId = getAuthenticatedEmployeeId(authentication);
+        UUID employeeId = getAuthenticatedEmployeeId(authentication);
 
         LeaveResponse response =
                 leaveService.applyForLeave(employeeId, request);
@@ -53,7 +55,7 @@ public class LeaveController {
     public ResponseEntity<List<LeaveResponse>> getMyLeaves(
             Authentication authentication) {
 
-        Long employeeId = getAuthenticatedEmployeeId(authentication);
+        UUID employeeId = getAuthenticatedEmployeeId(authentication);
 
         return ResponseEntity.ok(
                 leaveService.getMyLeaves(employeeId)
@@ -63,10 +65,10 @@ public class LeaveController {
     // Get one leave request belonging to the logged-in employee
     @GetMapping("/{id}")
     public ResponseEntity<LeaveResponse> getMyLeaveById(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             Authentication authentication) {
 
-        Long employeeId = getAuthenticatedEmployeeId(authentication);
+        UUID employeeId = getAuthenticatedEmployeeId(authentication);
 
         return ResponseEntity.ok(
                 leaveService.getMyLeaveById(id, employeeId)
@@ -74,7 +76,7 @@ public class LeaveController {
     }
 
     // Get leave requests by status
-    // This endpoint must be restricted to HR and ADMIN by security configuration.
+    // Restrict this endpoint to HR and ADMIN in security configuration.
     @GetMapping
     public ResponseEntity<List<LeaveResponse>> getLeavesByStatus(
             @RequestParam LeaveStatus status) {
@@ -87,34 +89,37 @@ public class LeaveController {
     // Cancel a pending leave request
     @PutMapping("/{id}/cancel")
     public ResponseEntity<LeaveResponse> cancelLeave(
-            @PathVariable Long id,
+            @PathVariable UUID id,
             Authentication authentication) {
 
-        Long employeeId = getAuthenticatedEmployeeId(authentication);
+        UUID employeeId = getAuthenticatedEmployeeId(authentication);
 
         return ResponseEntity.ok(
                 leaveService.cancelLeave(id, employeeId)
         );
     }
 
-    // Read employee ID from the authenticated principal
-    private Long getAuthenticatedEmployeeId(
+    // Read employee UUID from authenticated principal
+    private UUID getAuthenticatedEmployeeId(
             Authentication authentication) {
 
         if (authentication == null
-                || authentication.getName() == null) {
+                || authentication.getName() == null
+                || authentication.getName().isBlank()) {
+
             throw new LeaveException(
                     "Authenticated employee information is missing"
             );
         }
 
         try {
-            return Long.parseLong(authentication.getName());
-        } catch (NumberFormatException ex) {
+            return UUID.fromString(authentication.getName());
+
+        } catch (IllegalArgumentException ex) {
+
             throw new LeaveException(
-                    "JWT principal name must contain the employee ID"
+                    "JWT principal name must contain a valid employee UUID"
             );
         }
     }
 }
-

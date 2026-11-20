@@ -3,6 +3,7 @@ package com.example.leave.repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -17,11 +18,11 @@ import jakarta.persistence.LockModeType;
 
 @Repository
 public interface LeaveRequestRepository
-        extends JpaRepository<LeaveRequest, Long> {
+        extends JpaRepository<LeaveRequest, UUID> {
 
     // Find all leave requests submitted by an employee
     List<LeaveRequest> findByEmployeeIdOrderByCreatedAtDesc(
-            Long employeeId);
+    		UUID employeeId);
 
     // Find leave requests by status
     List<LeaveRequest> findByStatusOrderByCreatedAtAsc(
@@ -29,8 +30,8 @@ public interface LeaveRequestRepository
 
     // Find a specific leave request belonging to an employee
     Optional<LeaveRequest> findByIdAndEmployeeId(
-            Long id,
-            Long employeeId);
+    		UUID id,
+    		UUID employeeId);
 
     // Check whether an employee has an overlapping leave request
     @Query("""
@@ -42,7 +43,7 @@ public interface LeaveRequestRepository
           AND l.endDate >= :startDate
     """)
     boolean existsOverlappingRequest(
-            @Param("employeeId") Long employeeId,
+            @Param("employeeId") UUID employeeId,
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("statuses") List<LeaveStatus> statuses
@@ -56,6 +57,6 @@ public interface LeaveRequestRepository
         WHERE l.id = :id
     """)
     Optional<LeaveRequest> findByIdForUpdate(
-            @Param("id") Long id);
+            @Param("id") UUID id);
 }
 

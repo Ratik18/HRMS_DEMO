@@ -1,4 +1,3 @@
-
 server:
   port: 8082
 
@@ -10,6 +9,7 @@ spring:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_demo
     username: postgres
     password: Hitesh@2001
+
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -38,3 +38,9 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+# JWT: MUST be the same secret the auth-service uses to sign tokens
+security:
+  jwt:
+    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
+
