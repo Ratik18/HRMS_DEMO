@@ -1,6 +1,5 @@
 package com.example.leave.controller;
 
-
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -17,16 +16,14 @@ public class LeaveTypeController {
 
     private final LeaveTypeRepository leaveTypeRepository;
 
-    public LeaveTypeController(
-            LeaveTypeRepository leaveTypeRepository) {
+    public LeaveTypeController(LeaveTypeRepository leaveTypeRepository) {
         this.leaveTypeRepository = leaveTypeRepository;
     }
 
     @GetMapping
     public ResponseEntity<List<LeaveType>> getAllLeaveTypes() {
 
-        List<LeaveType> leaveTypes =
-                leaveTypeRepository.findByActiveTrue();
+        List<LeaveType> leaveTypes = leaveTypeRepository.findAll();
 
         return ResponseEntity.ok(leaveTypes);
     }

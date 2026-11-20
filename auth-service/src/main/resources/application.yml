@@ -36,5 +36,5 @@ eureka:
 
 security:
   jwt:
-    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
+    secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
     expiration-ms: 3600000

@@ -1,3 +1,4 @@
+
 package com.example.leave.model;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import jakarta.persistence.Table;
 public class LeaveApprovalHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(name = "leave_request_id", nullable = false)
@@ -25,10 +26,10 @@ public class LeaveApprovalHistory {
     @Column(name = "approver_id", nullable = false)
     private UUID approverId;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "action", nullable = false, length = 20)
     private String action;
 
-    @Column(length = 500)
+    @Column(name = "comment", length = 500)
     private String comment;
 
     @Column(name = "action_at", nullable = false, updatable = false)
@@ -92,4 +93,3 @@ public class LeaveApprovalHistory {
         this.actionAt = actionAt;
     }
 }
-

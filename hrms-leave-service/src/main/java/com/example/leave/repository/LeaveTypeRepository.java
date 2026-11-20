@@ -9,17 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import com.example.leave.model.LeaveType;
 
-
 @Repository
 public interface LeaveTypeRepository extends JpaRepository<LeaveType, UUID> { 
-	
-
-    List<LeaveType> findByActiveTrue();
-
     Optional<LeaveType> findByNameIgnoreCase(String name);
-	
-	
-	
-	
 
 }

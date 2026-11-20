@@ -36,7 +36,7 @@ CREATE TABLE leave_management.leave_requests (
         CHECK (total_days > 0),
 
     CONSTRAINT chk_leave_request_status
-        CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED')
+        CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED'))
 
 );
 
