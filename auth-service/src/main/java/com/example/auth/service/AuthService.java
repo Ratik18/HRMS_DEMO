@@ -4,10 +4,12 @@ package com.example.auth.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.auth.dto.ForgotPasswordRequest;
 import com.example.auth.dto.LoginRequest;
 import com.example.auth.dto.LoginResponse;
 import com.example.auth.dto.RegisterRequest;
 import com.example.auth.exception.InvalidCredentialsException;
+import com.example.auth.exception.UserNotFoundException;
 import com.example.auth.model.User;
 import com.example.auth.repository.UserRepository;
 
@@ -44,6 +46,26 @@ public class AuthService {
         userRepository.save(user);
 
         return "User registered successfully";
+    }
+
+    // FORGOT PASSWORD: find the user by email and save a new BCrypt hash
+    public String forgotPassword(ForgotPasswordRequest request) {
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            throw new IllegalArgumentException("Passwords do not match");
+        }
+
+        String email = request.getEmail().trim().toLowerCase();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new UserNotFoundException(
+                                "No account found with this email"));
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        return "Password updated successfully";
     }
 
     // LOGIN

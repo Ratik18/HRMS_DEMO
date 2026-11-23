@@ -1,0 +1,17 @@
+CREATE TABLE leave_management.leave_balances (
+    id UUID PRIMARY KEY,
+    employee_id UUID NOT NULL,
+    leave_type_id UUID NOT NULL,
+    year INTEGER NOT NULL,
+    balance NUMERIC(5, 2) NOT NULL,
+    consumed NUMERIC(5, 2) NOT NULL DEFAULT 0,
+    reserved NUMERIC(5, 2) NOT NULL DEFAULT 0,
+    version BIGINT NOT NULL DEFAULT 0,
+
+    CONSTRAINT fk_leave_balance_leave_type
+        FOREIGN KEY (leave_type_id)
+        REFERENCES leave_management.leave_types(id),
+
+    CONSTRAINT uk_employee_leave_type_year
+        UNIQUE (employee_id, leave_type_id, year)
+);

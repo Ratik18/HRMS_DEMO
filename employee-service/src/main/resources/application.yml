@@ -8,7 +8,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_demo
     username: postgres
-    password: Bhumi@570
+    password: Hitesh@2001
+
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -41,5 +42,5 @@ eureka:
 # JWT: MUST be the same secret the auth-service uses to sign tokens
 security:
   jwt:
-    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
+    secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
 

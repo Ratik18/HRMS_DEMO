@@ -8,7 +8,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_auth_db
     username: postgres
-    password: Bhumi@570
+    password: Hitesh@2001
+
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -35,5 +36,5 @@ eureka:
 
 security:
   jwt:
-    secret: "FfibNfnZQbrlWQmmCt7aXnvSOtM0T3KLkpB350V+M/Y="
+    secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
     expiration-ms: 3600000

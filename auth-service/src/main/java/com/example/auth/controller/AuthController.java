@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.auth.dto.ForgotPasswordRequest;
 import com.example.auth.dto.LoginRequest;
 import com.example.auth.dto.LoginResponse;
 import com.example.auth.dto.RegisterRequest;
@@ -43,6 +44,16 @@ public class AuthController {
         System.out.println("LOGIN CONTROLLER REACHED");
 
         LoginResponse response = authService.login(request);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // FORGOT PASSWORD API
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request) {
+
+        String response = authService.forgotPassword(request);
 
         return ResponseEntity.ok(response);
     }

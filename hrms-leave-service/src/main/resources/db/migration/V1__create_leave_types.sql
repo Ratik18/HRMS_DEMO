@@ -1,0 +1,10 @@
+CREATE SCHEMA IF NOT EXISTS leave_management;
+
+CREATE TABLE leave_management.leave_types (
+    id UUID PRIMARY KEY,
+    code VARCHAR(50) NOT NULL UNIQUE,
+    name VARCHAR(100) NOT NULL,
+    accrual_rate_per_month NUMERIC(5, 2) NOT NULL,
+    max_carry_forward INTEGER,
+    is_paid BOOLEAN NOT NULL
+);
