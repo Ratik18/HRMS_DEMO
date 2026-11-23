@@ -2,100 +2,201 @@ package com.example.attendance.service;
 
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.example.attendance.dto.AttendanceSummaryResponse;
+import com.example.attendance.dto.AttendanceCorrectionRequest;
+import com.example.attendance.dto.AttendanceResponse;
+import com.example.attendance.dto.CheckInRequest;
+import com.example.attendance.dto.CheckOutRequest;
+import com.example.attendance.exception.AttendanceException;
 import com.example.attendance.model.AttendanceRecord;
+import com.example.attendance.model.AttendanceStatus;
 import com.example.attendance.repository.AttendanceRepository;
-import com.example.attendance.repository.HolidayRepository;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class AttendanceReportService {
 
-    private final AttendanceRepository attendanceRepository;
-    private final HolidayRepository holidayRepository;
+    private final AttendanceRepository repository;
 
-    public AttendanceReportService(
-            AttendanceRepository attendanceRepository,
-            HolidayRepository holidayRepository) {
-
-        this.attendanceRepository = attendanceRepository;
-        this.holidayRepository = holidayRepository;
+    public AttendanceReportService(AttendanceRepository repository) {
+        this.repository = repository;
     }
 
-    public AttendanceSummaryResponse getMonthlySummary(
+    // Employee Check-in
+    @Transactional
+    public AttendanceResponse checkIn(
+            Long employeeId, CheckInRequest request) {
+
+        LocalDateTime checkInTime = request.getCheckInTime();
+
+        if (checkInTime == null) {
+            throw new AttendanceException("Check-in time is required");
+        }
+
+        if (checkInTime.isAfter(LocalDateTime.now())) {
+            throw new AttendanceException("Future check-in is not allowed");
+        }
+
+        LocalDate date = checkInTime.toLocalDate();
+
+        if (repository.existsByEmployeeIdAndAttendanceDate(
+                employeeId, date)) {
+            throw new AttendanceException(
+                    "Attendance already exists for this date");
+        }
+
+        AttendanceRecord record = new AttendanceRecord();
+
+        record.setEmployeeId(employeeId);
+        record.setAttendanceDate(date);
+        record.setCheckIn(checkInTime);
+        record.setStatus(AttendanceStatus.PRESENT);
+
+        AttendanceRecord saved = repository.save(record);
+
+        return convertToResponse(saved);
+    }
+
+    // Employee Check-out
+    @Transactional
+    public AttendanceResponse checkOut(
+            Long employeeId, CheckOutRequest request) {
+
+        LocalDateTime checkOutTime = request.getCheckOutTime();
+
+        if (checkOutTime == null) {
+            throw new AttendanceException("Check-out time is required");
+        }
+
+        if (checkOutTime.isAfter(LocalDateTime.now())) {
+            throw new AttendanceException("Future check-out is not allowed");
+        }
+
+        LocalDate date = checkOutTime.toLocalDate();
+
+        AttendanceRecord record = repository
+                .findByEmployeeIdAndAttendanceDate(employeeId, date)
+                .orElseThrow(() -> new AttendanceException(
+                        "Check-in record not found"));
+
+        if (record.getCheckOut() != null) {
+            throw new AttendanceException("Already checked out");
+        }
+
+        if (checkOutTime.isBefore(record.getCheckIn())) {
+            throw new AttendanceException(
+                    "Check-out cannot be earlier than check-in");
+        }
+
+        record.setCheckOut(checkOutTime);
+
+        return convertToResponse(repository.save(record));
+    }
+
+    // Get employee attendance
+    public List<AttendanceResponse> getMyAttendance(
             Long employeeId,
-            int year,
-            int month) {
+            LocalDate startDate,
+            LocalDate endDate) {
 
-        LocalDate startDate = LocalDate.of(year, month, 1);
+        validateDateRange(startDate, endDate);
 
-        LocalDate endDate = startDate.withDayOfMonth(
-            startDate.lengthOfMonth()
-        );
-
-        List<AttendanceRecord> records =
-            attendanceRepository
+        return repository
                 .findByEmployeeIdAndAttendanceDateBetween(
-                    employeeId,
-                    startDate,
-                    endDate
-                );
+                        employeeId, startDate, endDate)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
 
-        int present = 0;
-        int absent = 0;
-        int halfDay = 0;
-        int leave = 0;
-        int holiday = 0;
-        int weekOff = 0;
+    // Get all employee attendance
+    public List<AttendanceResponse> getAllAttendance(
+            LocalDate startDate,
+            LocalDate endDate) {
 
-        for (AttendanceRecord record : records) {
+        validateDateRange(startDate, endDate);
 
-            switch (record.getStatus()) {
+        return repository
+                .findByAttendanceDateBetween(startDate, endDate)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
 
-                case PRESENT -> present++;
+    // Attendance correction
+    @Transactional
+    public AttendanceResponse correctAttendance(
+            Long id,
+            AttendanceCorrectionRequest request) {
 
-                case ABSENT -> absent++;
+        AttendanceRecord record = repository.findById(id)
+                .orElseThrow(() -> new AttendanceException(
+                        "Attendance record not found"));
 
-                case HALF_DAY -> halfDay++;
-
-                case ON_LEAVE -> leave++;
-
-                case HOLIDAY -> holiday++;
-
-                case WEEK_OFF -> weekOff++;
-            }
+        if (request.getStatus() == null) {
+            throw new AttendanceException("Status is required");
         }
 
-        int workingDays = 0;
+        LocalDateTime checkIn = request.getCheckIn();
+        LocalDateTime checkOut = request.getCheckOut();
 
-        for (LocalDate date = startDate;
-             !date.isAfter(endDate);
-             date = date.plusDays(1)) {
-
-            boolean isHoliday =
-                holidayRepository.existsByHolidayDate(date);
-
-            boolean isSunday =
-                date.getDayOfWeek() == DayOfWeek.SUNDAY;
-
-            if (!isHoliday && !isSunday) {
-                workingDays++;
-            }
+        if (checkIn != null && checkOut != null
+                && checkOut.isBefore(checkIn)) {
+            throw new AttendanceException(
+                    "Check-out cannot be earlier than check-in");
         }
 
-        return new AttendanceSummaryResponse(
-            employeeId,
-            workingDays,
-            present,
-            absent,
-            halfDay,
-            leave,
-            holiday,
-            weekOff
+        if (checkIn != null
+                && !checkIn.toLocalDate().equals(record.getAttendanceDate())) {
+            throw new AttendanceException(
+                    "Check-in date must match attendance date");
+        }
+
+        if (checkOut != null
+                && !checkOut.toLocalDate().equals(record.getAttendanceDate())) {
+            throw new AttendanceException(
+                    "Check-out date must match attendance date");
+        }
+
+        record.setCheckIn(checkIn);
+        record.setCheckOut(checkOut);
+        record.setStatus(request.getStatus());
+        record.setRemarks(request.getRemarks());
+
+        return convertToResponse(repository.save(record));
+    }
+
+    // Validate date range
+    private void validateDateRange(
+            LocalDate startDate, LocalDate endDate) {
+
+        if (startDate == null || endDate == null) {
+            throw new AttendanceException(
+                    "Start date and end date are required");
+        }
+
+        if (startDate.isAfter(endDate)) {
+            throw new AttendanceException(
+                    "Start date cannot be after end date");
+        }
+    }
+
+    // Convert Entity to DTO
+    private AttendanceResponse convertToResponse(
+            AttendanceRecord record) {
+
+        return new AttendanceResponse(
+                record.getId(),
+                record.getEmployeeId(),
+                record.getAttendanceDate(),
+                record.getCheckIn(),
+                record.getCheckOut(),
+                record.getStatus(),
+                record.getRemarks()
         );
     }
 }

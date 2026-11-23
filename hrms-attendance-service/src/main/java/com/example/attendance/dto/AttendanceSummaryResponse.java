@@ -1,23 +1,61 @@
 package com.example.attendance.dto;
 
+public class AttendanceSummaryResponse {
 
+    private Long employeeId;
+    private int totalPresent;
+    private int totalAbsent;
+    private int totalHalfDay;
+    private int totalLeave;
+    private int totalHolidays;
+    private int totalWeekOff;
 
-public record AttendanceSummaryResponse(
+    public AttendanceSummaryResponse() {
+    }
 
-    Long employeeId,
+    public AttendanceSummaryResponse(
+            Long employeeId,
+            int totalPresent,
+            int totalAbsent,
+            int totalHalfDay,
+            int totalLeave,
+            int totalHolidays,
+            int totalWeekOff) {
 
-    int totalWorkingDays,
+        this.employeeId = employeeId;
+        this.totalPresent = totalPresent;
+        this.totalAbsent = totalAbsent;
+        this.totalHalfDay = totalHalfDay;
+        this.totalLeave = totalLeave;
+        this.totalHolidays = totalHolidays;
+        this.totalWeekOff = totalWeekOff;
+    }
 
-    int presentDays,
+    public Long getEmployeeId() {
+        return employeeId;
+    }
 
-    int absentDays,
+    public int getTotalPresent() {
+        return totalPresent;
+    }
 
-    int halfDays,
+    public int getTotalAbsent() {
+        return totalAbsent;
+    }
 
-    int leaveDays,
+    public int getTotalHalfDay() {
+        return totalHalfDay;
+    }
 
-    int holidays,
+    public int getTotalLeave() {
+        return totalLeave;
+    }
 
-    int weekOffs
+    public int getTotalHolidays() {
+        return totalHolidays;
+    }
 
-) {}
+    public int getTotalWeekOff() {
+        return totalWeekOff;
+    }
+}

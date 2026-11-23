@@ -1,39 +1,43 @@
+
 package com.example.attendance.controller;
 
+import com.example.attendance.dto.AttendanceSummaryResponse;
+import com.example.attendance.service.AttendanceService;
 
-import org.springframework.security.access.prepost.PreAuthorize;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.attendance.dto.AttendanceSummaryResponse;
-import com.example.attendance.service.AttendanceReportService;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/attendance/reports")
 public class AttendanceReportController {
 
-    private final AttendanceReportService reportService;
+    private final AttendanceService reportService;
 
     public AttendanceReportController(
-            AttendanceReportService reportService) {
-
+            AttendanceService reportService) {
         this.reportService = reportService;
     }
 
-    @GetMapping("/my/monthly")
-    @PreAuthorize("hasRole('EMPLOYEE')")
-    public AttendanceSummaryResponse getMyMonthlyReport(
-            @AuthenticationPrincipal Jwt jwt,
-            @RequestParam int year,
-            @RequestParam int month) {
+    // Employee Attendance Summary
+    @GetMapping("/summary/{employeeId}")
+    public ResponseEntity<AttendanceSummaryResponse> getAttendanceSummary(
+            @PathVariable Long employeeId,
 
-        Long employeeId = jwt.getClaim("employee_id");
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate startDate,
 
-        return reportService.getMonthlySummary(
-            employeeId,
-            year,
-            month
-        );
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate endDate) {
+
+        AttendanceSummaryResponse response =
+                reportService.getAttendanceSummary(
+                        employeeId, startDate, endDate);
+
+        return ResponseEntity.ok(response);
     }
 }
