@@ -1,86 +1,40 @@
 package com.example.leave.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
-public class LeaveResponse {
+import com.example.leave.model.LeaveStatus;
 
-    private Long id;
-    private Long employeeId;
-    private String leaveType;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String reason;
-    private String status;
+public record LeaveResponse(
 
-    public LeaveResponse() {
-    }
+		UUID id,
 
-    public LeaveResponse(Long id, Long employeeId,
-                         String leaveType, LocalDate startDate,
-                         LocalDate endDate, String reason,
-                         String status) {
-        this.id = id;
-        this.employeeId = employeeId;
-        this.leaveType = leaveType;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.reason = reason;
-        this.status = status;
-    }
+		UUID employeeId,
 
-    public Long getId() {
-        return id;
-    }
+		UUID leaveTypeId,
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+        LocalDate startDate,
 
-    public Long getEmployeeId() {
-        return employeeId;
-    }
+        LocalDate endDate,
 
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
-    }
+        BigDecimal totalDays,
 
-    public String getLeaveType() {
-        return leaveType;
-    }
+        String reason,
 
-    public void setLeaveType(String leaveType) {
-        this.leaveType = leaveType;
-    }
+        LeaveStatus status,
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
+        UUID approverId,
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
+        String decisionComment,
 
-    public LocalDate getEndDate() {
-        return endDate;
-    }
+        LocalDateTime createdAt,
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
+        LocalDateTime updatedAt
 
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+) {
 }
+
+
+

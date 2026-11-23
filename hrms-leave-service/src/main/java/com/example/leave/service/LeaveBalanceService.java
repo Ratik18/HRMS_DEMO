@@ -1,3 +1,4 @@
+
 package com.example.leave.service;
 
 
@@ -8,19 +9,17 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.leave.dto.LeaveBalanceResponse;
 import com.example.leave.model.LeaveBalance;
 import com.example.leave.repository.LeaveBalanceRepository;
+import com.example.leave.dto.LeaveBalanceResponse;
 
 @Service
-@Transactional(readOnly = true)
 public class LeaveBalanceService {
 
     private final LeaveBalanceRepository leaveBalanceRepository;
 
     public LeaveBalanceService(
             LeaveBalanceRepository leaveBalanceRepository) {
-
         this.leaveBalanceRepository = leaveBalanceRepository;
     }
 
@@ -38,7 +37,8 @@ public class LeaveBalanceService {
 
     // 2. Get leave balances by employee ID and year
     public List<LeaveBalanceResponse> getBalancesByEmployeeIdAndYear(
-            UUID employeeId, Integer year) {
+            UUID employeeId,
+            Integer year) {
 
         List<LeaveBalance> balances =
                 leaveBalanceRepository.findAllByEmployeeIdAndYear(
@@ -57,8 +57,10 @@ public class LeaveBalanceService {
             Integer year,
             BigDecimal days) {
 
-        LeaveBalance balance = findBalance(
-                employeeId, leaveTypeId, year);
+        validateDays(days);
+
+        LeaveBalance balance =
+                findBalance(employeeId, leaveTypeId, year);
 
         balance.reserve(days);
 
@@ -73,8 +75,10 @@ public class LeaveBalanceService {
             Integer year,
             BigDecimal days) {
 
-        LeaveBalance balance = findBalance(
-                employeeId, leaveTypeId, year);
+        validateDays(days);
+
+        LeaveBalance balance =
+                findBalance(employeeId, leaveTypeId, year);
 
         balance.confirmDeduction(days);
 
@@ -89,15 +93,46 @@ public class LeaveBalanceService {
             Integer year,
             BigDecimal days) {
 
-        LeaveBalance balance = findBalance(
-                employeeId, leaveTypeId, year);
+        validateDays(days);
+
+        LeaveBalance balance =
+                findBalance(employeeId, leaveTypeId, year);
 
         balance.releaseReservation(days);
 
         leaveBalanceRepository.save(balance);
     }
 
-    // 6. Find leave balance
+    // 6. Deduct leave balance
+    @Transactional
+    public void deductBalance(
+            UUID employeeId,
+            UUID leaveTypeId,
+            Integer year,
+            BigDecimal days) {
+
+        validateDays(days);
+
+        LeaveBalance balance =
+                findBalance(employeeId, leaveTypeId, year);
+
+        BigDecimal remainingDays =
+                balance.getBalance()
+                        .subtract(balance.getConsumed())
+                        .subtract(balance.getReserved());
+
+        if (remainingDays.compareTo(days) < 0) {
+            throw new IllegalArgumentException(
+                    "Insufficient leave balance");
+        }
+
+        balance.reserve(days);
+        balance.confirmDeduction(days);
+
+        leaveBalanceRepository.save(balance);
+    }
+
+    // 7. Find leave balance
     private LeaveBalance findBalance(
             UUID employeeId,
             UUID leaveTypeId,
@@ -111,7 +146,18 @@ public class LeaveBalanceService {
                                 "Leave balance not found"));
     }
 
-    // 7. Convert Entity into Response DTO
+    // 8. Validate leave days
+    private void validateDays(BigDecimal days) {
+
+        if (days == null ||
+                days.compareTo(BigDecimal.ZERO) <= 0) {
+
+            throw new IllegalArgumentException(
+                    "Days must be positive");
+        }
+    }
+
+    // 9. Convert Entity into Response DTO
     private LeaveBalanceResponse convertToResponse(
             LeaveBalance balance) {
 
