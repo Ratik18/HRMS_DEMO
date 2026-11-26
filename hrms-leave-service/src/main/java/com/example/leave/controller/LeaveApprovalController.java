@@ -1,7 +1,4 @@
-
 package com.example.leave.controller;
-
-import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +12,7 @@ import com.example.leave.dto.LeaveDecisionRequest;
 import com.example.leave.dto.LeaveResponse;
 import com.example.leave.exception.LeaveException;
 import com.example.leave.service.LeaveApprovalService;
+import com.example.leave.service.LeaveService;
 
 import jakarta.validation.Valid;
 
@@ -23,20 +21,24 @@ import jakarta.validation.Valid;
 public class LeaveApprovalController {
 
     private final LeaveApprovalService leaveApprovalService;
+    private final LeaveService leaveService;
 
     public LeaveApprovalController(
-            LeaveApprovalService leaveApprovalService) {
+            LeaveApprovalService leaveApprovalService,
+            LeaveService leaveService) {
+
         this.leaveApprovalService = leaveApprovalService;
+        this.leaveService = leaveService;
     }
 
     // Approve a leave request
     @PutMapping("/{id}/approve")
     public ResponseEntity<LeaveResponse> approveLeave(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @Valid @RequestBody LeaveDecisionRequest request,
             Authentication authentication) {
 
-        UUID approverId = getAuthenticatedEmployeeId(authentication);
+        Long approverId = getAuthenticatedEmployeeId(authentication);
 
         LeaveResponse response = leaveApprovalService.approveLeave(
                 id,
@@ -50,11 +52,11 @@ public class LeaveApprovalController {
     // Reject a leave request
     @PutMapping("/{id}/reject")
     public ResponseEntity<LeaveResponse> rejectLeave(
-            @PathVariable UUID id,
+            @PathVariable Long id,
             @Valid @RequestBody LeaveDecisionRequest request,
             Authentication authentication) {
 
-        UUID approverId = getAuthenticatedEmployeeId(authentication);
+        Long approverId = getAuthenticatedEmployeeId(authentication);
 
         LeaveResponse response = leaveApprovalService.rejectLeave(
                 id,
@@ -65,19 +67,16 @@ public class LeaveApprovalController {
         return ResponseEntity.ok(response);
     }
 
-    // Extract approver ID from authenticated user
-    private UUID getAuthenticatedEmployeeId(Authentication authentication) {
+    // Resolve authenticated email to numeric ID
+    private Long getAuthenticatedEmployeeId(Authentication authentication) {
 
-        if (authentication == null || authentication.getName() == null) {
+        if (authentication == null
+                || authentication.getName() == null
+                || authentication.getName().isBlank()) {
+
             throw new LeaveException("User is not authenticated");
         }
 
-        try {
-            return UUID.fromString(authentication.getName());
-        } catch (IllegalArgumentException ex) {
-            throw new LeaveException(
-                    "Authenticated user ID must be a valid UUID"
-            );
-        }
+        return leaveService.getEmployeeIdByEmail(authentication.getName());
     }
 }

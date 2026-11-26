@@ -1,5 +1,5 @@
 package com.example.leave.config;
- 
+
 import java.io.IOException;
 import java.util.Collections;
 
@@ -52,22 +52,25 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = authorizationHeader.substring(7);
 
         try {
+
             Claims claims = Jwts.parser()
                     .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
 
+            // Get Email from JWT Subject
             String email = claims.getSubject();
 
             if (email == null || email.isBlank()) {
                 response.sendError(
                         HttpServletResponse.SC_UNAUTHORIZED,
-                        "Invalid JWT subject"
+                        "Email missing in JWT token"
                 );
                 return;
             }
 
+            // Set Email as authenticated principal
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
                             email,
@@ -79,6 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .setAuthentication(authentication);
 
         } catch (Exception exception) {
+
             SecurityContextHolder.clearContext();
 
             response.sendError(

@@ -3,7 +3,6 @@ package com.example.leave.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,14 +20,14 @@ import jakarta.persistence.Table;
 public class LeaveRequest {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private UUID employeeId;
+    private Long employeeId;
 
     @Column(name = "leave_type_id", nullable = false)
-    private UUID leaveTypeId;
+    private Long leaveTypeId;
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -47,7 +46,7 @@ public class LeaveRequest {
     private LeaveStatus status = LeaveStatus.PENDING;
 
     @Column(name = "approver_id")
-    private UUID approverId;
+    private Long approverId;
 
     @Column(name = "decision_comment", length = 500)
     private String decisionComment;
@@ -77,27 +76,27 @@ public class LeaveRequest {
         this.updatedAt = LocalDateTime.now();
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(UUID employeeId) {
+    public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 
-    public UUID getLeaveTypeId() {
+    public Long getLeaveTypeId() {
         return leaveTypeId;
     }
 
-    public void setLeaveTypeId(UUID leaveTypeId) {
+    public void setLeaveTypeId(Long leaveTypeId) {
         this.leaveTypeId = leaveTypeId;
     }
 
@@ -141,11 +140,11 @@ public class LeaveRequest {
         this.status = status;
     }
 
-    public UUID getApproverId() {
+    public Long getApproverId() {
         return approverId;
     }
 
-    public void setApproverId(UUID approverId) {
+    public void setApproverId(Long approverId) {
         this.approverId = approverId;
     }
 
@@ -173,4 +172,3 @@ public class LeaveRequest {
         this.updatedAt = updatedAt;
     }
 }
-

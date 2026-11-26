@@ -1,7 +1,8 @@
 package com.example.leave.model;
 
+
+
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -18,11 +19,11 @@ import jakarta.persistence.*;
 public class LeaveBalance {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "employee_id", nullable = false)
-    private UUID employeeId;
+    private Long employeeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leave_type_id", nullable = false)
@@ -90,19 +91,19 @@ public class LeaveBalance {
 
     // Getters and Setters
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(UUID employeeId) {
+    public void setEmployeeId(Long employeeId) {
         this.employeeId = employeeId;
     }
 
