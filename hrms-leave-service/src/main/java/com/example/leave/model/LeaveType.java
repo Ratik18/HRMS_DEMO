@@ -3,7 +3,6 @@ package com.example.leave.model;
 
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import jakarta.persistence.*;
 
@@ -12,8 +11,8 @@ import jakarta.persistence.*;
 public class LeaveType {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String code;
@@ -32,11 +31,11 @@ public class LeaveType {
     public LeaveType() {
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -1,20 +1,24 @@
-
 package com.example.leave.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.leave.dto.LeaveApplicationRequest;
 import com.example.leave.dto.LeaveResponse;
 import com.example.leave.exception.LeaveException;
+import com.example.leave.model.LeaveBalance;
 import com.example.leave.model.LeaveRequest;
 import com.example.leave.model.LeaveStatus;
+import com.example.leave.repository.LeaveBalanceRepository;
 import com.example.leave.repository.LeaveRequestRepository;
 
 @Service
@@ -23,13 +27,43 @@ public class LeaveService {
 
     private final LeaveRequestRepository leaveRequestRepository;
 
-    public LeaveService(LeaveRequestRepository leaveRequestRepository) {
+    private final LeaveBalanceRepository leaveBalanceRepository;
+
+    private final JdbcTemplate authJdbcTemplate;
+
+    public LeaveService(
+            LeaveRequestRepository leaveRequestRepository,
+            LeaveBalanceRepository leaveBalanceRepository,
+            @Qualifier("authJdbcTemplate") JdbcTemplate authJdbcTemplate) {
+
         this.leaveRequestRepository = leaveRequestRepository;
+        this.leaveBalanceRepository = leaveBalanceRepository;
+        this.authJdbcTemplate = authJdbcTemplate;
+    }
+
+    // Get Employee ID using authenticated email from Auth Database
+    @Transactional(readOnly = true)
+    public Long getEmployeeIdByEmail(String email) {
+
+        if (email == null || email.isBlank()) {
+            throw new LeaveException("Authenticated email is missing");
+        }
+
+        try {
+            return authJdbcTemplate.queryForObject(
+                    "SELECT id FROM auth.users WHERE LOWER(email) = LOWER(?)",
+                    Long.class,
+                    email.trim()
+            );
+
+        } catch (EmptyResultDataAccessException ex) {
+            throw new LeaveException("User not found in Auth Database");
+        }
     }
 
     // Apply for a new leave
     public LeaveResponse applyForLeave(
-            UUID employeeId,
+            Long employeeId,
             LeaveApplicationRequest request) {
 
         validateEmployeeId(employeeId);
@@ -40,7 +74,6 @@ public class LeaveService {
 
         validateLeaveDates(request.startDate(), request.endDate());
 
-        // Check whether the employee already has an overlapping request.
         List<LeaveStatus> overlappingStatuses = List.of(
                 LeaveStatus.PENDING,
                 LeaveStatus.APPROVED
@@ -84,7 +117,7 @@ public class LeaveService {
 
     // Get all leave requests belonging to an employee
     @Transactional(readOnly = true)
-    public List<LeaveResponse> getMyLeaves(UUID employeeId) {
+    public List<LeaveResponse> getMyLeaves(Long employeeId) {
 
         validateEmployeeId(employeeId);
 
@@ -95,11 +128,23 @@ public class LeaveService {
                 .toList();
     }
 
+    // Get logged-in employee's leave balance for current year
+    @Transactional(readOnly = true)
+    public List<LeaveBalance> getMyLeaveBalance(Long employeeId) {
+
+        validateEmployeeId(employeeId);
+
+        int currentYear = Year.now().getValue();
+
+        return leaveBalanceRepository
+                .findAllByEmployeeIdAndYear(employeeId, currentYear);
+    }
+
     // Get a specific leave request belonging to an employee
     @Transactional(readOnly = true)
     public LeaveResponse getMyLeaveById(
-            UUID leaveId,
-            UUID employeeId) {
+            Long leaveId,
+            Long employeeId) {
 
         validateEmployeeId(employeeId);
 
@@ -133,8 +178,8 @@ public class LeaveService {
 
     // Cancel a pending leave request
     public LeaveResponse cancelLeave(
-            UUID leaveId,
-            UUID employeeId) {
+            Long leaveId,
+            Long employeeId) {
 
         validateEmployeeId(employeeId);
 
@@ -163,7 +208,7 @@ public class LeaveService {
     }
 
     // Validate employee ID
-    private void validateEmployeeId(UUID employeeId) {
+    private void validateEmployeeId(Long employeeId) {
 
         if (employeeId == null) {
             throw new LeaveException("Invalid employee ID");
@@ -209,7 +254,7 @@ public class LeaveService {
             LeaveRequest leaveRequest) {
 
         return new LeaveResponse(
-        		leaveRequest.getId(),
+                leaveRequest.getId(),
                 leaveRequest.getEmployeeId(),
                 leaveRequest.getLeaveTypeId(),
                 leaveRequest.getStartDate(),
