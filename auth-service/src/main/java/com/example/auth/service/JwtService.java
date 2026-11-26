@@ -1,5 +1,5 @@
-package com.example.auth.service;
 
+package com.example.auth.service;
 
 import java.util.Date;
 
@@ -14,14 +14,13 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {
-	
 
     private final SecretKey secretKey;
     private final long expirationMs;
 
     public JwtService(
             @Value("${security.jwt.secret}") String secret,
-            @Value("${security.jwt.expiration-ms:3600000}") long expirationMs) {
+            @Value("${security.jwt.expiration-ms:36000000}") long expirationMs) {
 
         byte[] keyBytes = Decoders.BASE64.decode(secret);
 
@@ -47,5 +46,4 @@ public class JwtService {
     public long getExpirationSeconds() {
         return expirationMs / 1000;
     }
-
 }

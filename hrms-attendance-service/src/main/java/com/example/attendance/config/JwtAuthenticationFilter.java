@@ -2,15 +2,16 @@
 package com.example.attendance.config;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -31,12 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    private final UserDetailsService userDetailsService;
-
-    public JwtAuthenticationFilter(UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
-    }
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -44,21 +39,32 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+        String authHeader = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
+        if (authHeader == null ||
+                !authHeader.startsWith("Bearer ")) {
+
             filterChain.doFilter(request, response);
             return;
         }
 
         try {
-            SecretKey key = Keys.hmacShaKeyFor(
-                    jwtSecret.getBytes(StandardCharsets.UTF_8));
+            String token = authHeader.substring(7).trim();
 
-            String token = header.substring(7);
+            if (token.isEmpty()) {
+                throw new JwtException("Empty JWT token");
+            }
 
+            // Decode Base64 Secret
+            byte[] decodedSecret =
+                    Base64.getDecoder().decode(jwtSecret.trim());
+
+            SecretKey secretKey =
+                    Keys.hmacShaKeyFor(decodedSecret);
+
+            // Validate JWT
             Claims claims = Jwts.parser()
-                    .verifyWith(key)
+                    .verifyWith(secretKey)
                     .build()
                     .parseSignedClaims(token)
                     .getPayload();
@@ -66,40 +72,89 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String username = claims.getSubject();
 
             if (username == null || username.isBlank()) {
-                response.sendError(401, "Invalid JWT subject");
-                return;
+                throw new JwtException("JWT subject missing");
             }
 
-            if (SecurityContextHolder.getContext()
-                    .getAuthentication() == null) {
+            Object roleClaim = claims.get("roles");
 
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(username);
-
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities());
-
-                authentication.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request));
-
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+            if (roleClaim == null) {
+                roleClaim = claims.get("role");
             }
 
-        } catch (JwtException | IllegalArgumentException ex) {
+            List<SimpleGrantedAuthority> authorities =
+                    new ArrayList<>();
+
+            if (roleClaim instanceof String) {
+
+                String role = (String) roleClaim;
+
+                authorities.add(new SimpleGrantedAuthority(
+                        role.startsWith("ROLE_")
+                                ? role
+                                : "ROLE_" + role
+                ));
+
+            } else if (roleClaim instanceof List<?>) {
+
+                for (Object item : (List<?>) roleClaim) {
+
+                    String role = item.toString();
+
+                    authorities.add(new SimpleGrantedAuthority(
+                            role.startsWith("ROLE_")
+                                    ? role
+                                    : "ROLE_" + role
+                    ));
+                }
+            }
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            authorities
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource()
+                            .buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authentication);
+
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+
+            System.err.println("JWT Token Expired");
+
             SecurityContextHolder.clearContext();
-            response.sendError(401, "Invalid or expired JWT");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+
+            response.getWriter().write(
+                "{\"error\":\"JWT token expired. Please login again.\"}"
+            );
+
             return;
-        } catch (org.springframework.security.core.userdetails.UsernameNotFoundException ex) {
+
+        } catch (JwtException | IllegalArgumentException e) {
+
+            System.err.println(
+                "JWT Validation Error: " +
+                e.getClass().getSimpleName()
+            );
+
             SecurityContextHolder.clearContext();
-            response.sendError(401, "User not found");
+
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+
+            response.getWriter().write(
+                "{\"error\":\"Invalid JWT token\"}"
+            );
+
             return;
         }
-
-        filterChain.doFilter(request, response);
     }
 }
