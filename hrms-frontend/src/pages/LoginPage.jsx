@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { getApiError } from '../services/api';
 import { Alert } from '../components/Feedback';
 import AuthLayout from '../components/AuthLayout';
+import { typedOnly } from '../utils/passwordGuard';
 
 export default function LoginPage() {
   const location = useLocation();
@@ -18,6 +19,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   // message sent from the Forgot Password page after a successful reset
   const [success, setSuccess] = useState(location.state?.message || '');
+
+  const warnPaste = () => setError('Pasting is disabled. Please type your password.');
 
   const submit = async (event) => {
     event.preventDefault(); setError(''); setSuccess(''); setBusy(true);
@@ -46,7 +49,7 @@ export default function LoginPage() {
         <label className="field-label" htmlFor="email">Email address</label>
         <div className="input-with-icon"><Mail size={17}/><input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" required /></div>
         <div className="field-label-row"><label className="field-label" htmlFor="password">Password</label>{mode === 'login' && <Link to="/forgot-password" className="forgot-link">Forgot password?</Link>}</div>
-        <div className="input-with-icon"><LockKeyhole size={17}/><input id="password" type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={mode === 'register' ? 'At least 8 characters' : 'Enter your password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={mode === 'register' ? 8 : undefined} required /><button type="button" className="password-toggle" onClick={() => setShowPassword((v) => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
+        <div className="input-with-icon"><LockKeyhole size={17}/><input id="password" {...typedOnly(warnPaste)} type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder={mode === 'register' ? 'At least 8 characters' : 'Enter your password'} autoComplete={mode === 'login' ? 'current-password' : 'new-password'} minLength={mode === 'register' ? 8 : undefined} required /><button type="button" className="password-toggle" onClick={() => setShowPassword((v) => !v)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
         <button className="button button-primary login-submit" type="submit" disabled={busy}>{busy ? 'Please wait...' : mode === 'login' ? 'Sign in to workspace' : 'Create account'}<ArrowRight size={17}/></button>
       </form>
       <div className="auth-switch">{mode === 'login' ? 'New to this workspace?' : 'Already registered?'} <button onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); setSuccess(''); }}>{mode === 'login' ? 'Create an account' : 'Sign in'}</button></div>

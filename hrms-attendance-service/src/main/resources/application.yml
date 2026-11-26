@@ -48,4 +48,4 @@ management:
       show-details: always
 
 jwt:
-  secret: Lb2B1PEf7E1X8SGEnSBjhX6NG7BnJMTH05IrLPylnCI=
+  secret: "M8dDrAhLNmE/xMi6+szGqcR+7xcNm9rxD7kDpz806LM="

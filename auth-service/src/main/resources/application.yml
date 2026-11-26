@@ -36,5 +36,9 @@ eureka:
 
 security:
   jwt:
+<<<<<<< Updated upstream
     secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
+=======
+    secret: "M8dDrAhLNmE/xMi6+szGqcR+7xcNm9rxD7kDpz806LM="
+>>>>>>> Stashed changes
     expiration-ms: 3600000
