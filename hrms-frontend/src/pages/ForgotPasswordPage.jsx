@@ -5,6 +5,7 @@ import AuthLayout from '../components/AuthLayout';
 import { Alert } from '../components/Feedback';
 import { authService } from '../services/authService';
 import { getApiError } from '../services/api';
+import { typedOnly } from '../utils/passwordGuard';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -20,6 +21,8 @@ export default function ForgotPasswordPage() {
 
   // stop the redirect timer if the user leaves the page early
   useEffect(() => () => clearTimeout(timer.current), []);
+
+  const warnPaste = () => setError('Pasting is disabled. Please type your password.');
 
   const submit = async (event) => {
     event.preventDefault();
@@ -56,10 +59,10 @@ export default function ForgotPasswordPage() {
         <div className="input-with-icon"><Mail size={17}/><input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@company.com" autoComplete="email" required /></div>
 
         <label className="field-label" htmlFor="newPassword">New password</label>
-        <div className="input-with-icon"><LockKeyhole size={17}/><input id="newPassword" type={showNew ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" minLength={8} required /><button type="button" className="password-toggle" onClick={() => setShowNew((v) => !v)} aria-label={showNew ? 'Hide password' : 'Show password'}>{showNew ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
+        <div className="input-with-icon"><LockKeyhole size={17}/><input id="newPassword" {...typedOnly(warnPaste)} type={showNew ? 'text' : 'password'} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" minLength={8} required /><button type="button" className="password-toggle" onClick={() => setShowNew((v) => !v)} aria-label={showNew ? 'Hide password' : 'Show password'}>{showNew ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
 
         <label className="field-label" htmlFor="confirmPassword">Confirm password</label>
-        <div className="input-with-icon"><LockKeyhole size={17}/><input id="confirmPassword" type={showConfirm ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter the new password" autoComplete="new-password" minLength={8} required /><button type="button" className="password-toggle" onClick={() => setShowConfirm((v) => !v)} aria-label={showConfirm ? 'Hide password' : 'Show password'}>{showConfirm ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
+        <div className="input-with-icon"><LockKeyhole size={17}/><input id="confirmPassword" {...typedOnly(warnPaste)} type={showConfirm ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Re-enter the new password" autoComplete="new-password" minLength={8} required /><button type="button" className="password-toggle" onClick={() => setShowConfirm((v) => !v)} aria-label={showConfirm ? 'Hide password' : 'Show password'}>{showConfirm ? <EyeOff size={17}/> : <Eye size={17}/>}</button></div>
 
         <button className="button button-primary login-submit" type="submit" disabled={busy || Boolean(success)}>{busy ? 'Please wait...' : 'Confirm'}<ArrowRight size={17}/></button>
       </form>
