@@ -1,7 +1,6 @@
 package com.example.leave.dto;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +10,7 @@ import jakarta.validation.constraints.Size;
 public record LeaveApplicationRequest(
 
         @NotNull(message = "Leave type ID is required")
-        UUID leaveTypeId,
+        Long leaveTypeId,
 
         @NotNull(message = "Start date is required")
         @FutureOrPresent(message = "Start date cannot be in the past")
@@ -26,4 +25,3 @@ public record LeaveApplicationRequest(
 
 ) {
 }
-

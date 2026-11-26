@@ -1,7 +1,4 @@
-
 package com.example.leave.service;
-
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,8 +36,8 @@ public class LeaveApprovalService {
 
     // Approve a leave request
     public LeaveResponse approveLeave(
-            UUID leaveId,
-            UUID approverId,
+            Long leaveId,
+            Long approverId,
             LeaveDecisionRequest request) {
 
         return processDecision(
@@ -53,8 +50,8 @@ public class LeaveApprovalService {
 
     // Reject a leave request
     public LeaveResponse rejectLeave(
-            UUID leaveId,
-            UUID approverId,
+            Long leaveId,
+            Long approverId,
             LeaveDecisionRequest request) {
 
         return processDecision(
@@ -67,8 +64,8 @@ public class LeaveApprovalService {
 
     // Common method for approval and rejection
     private LeaveResponse processDecision(
-            UUID leaveId,
-            UUID approverId,
+            Long leaveId,
+            Long approverId,
             LeaveDecisionRequest request,
             LeaveStatus decision) {
 

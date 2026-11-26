@@ -3,17 +3,16 @@ package com.example.leave.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import com.example.leave.model.LeaveStatus;
 
 public record LeaveResponse(
 
-		UUID id,
+        Long id,
 
-		UUID employeeId,
+        Long employeeId,
 
-		UUID leaveTypeId,
+        Long leaveTypeId,
 
         LocalDate startDate,
 
@@ -25,7 +24,7 @@ public record LeaveResponse(
 
         LeaveStatus status,
 
-        UUID approverId,
+        Long approverId,
 
         String decisionComment,
 
@@ -35,6 +34,3 @@ public record LeaveResponse(
 
 ) {
 }
-
-
-

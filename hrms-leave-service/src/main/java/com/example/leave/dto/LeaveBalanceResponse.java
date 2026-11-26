@@ -1,13 +1,11 @@
 package com.example.leave.dto;
 
-
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class LeaveBalanceResponse {
 
-    private UUID employeeId;
-    private UUID leaveTypeId;
+    private Long employeeId;
+    private Long leaveTypeId;
     private String leaveTypeName;
     private BigDecimal totalDays;
     private BigDecimal usedDays;
@@ -18,8 +16,8 @@ public class LeaveBalanceResponse {
     }
 
     public LeaveBalanceResponse(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             String leaveTypeName,
             BigDecimal totalDays,
             BigDecimal usedDays,
@@ -35,11 +33,11 @@ public class LeaveBalanceResponse {
         this.year = year;
     }
 
-    public UUID getEmployeeId() {
+    public Long getEmployeeId() {
         return employeeId;
     }
 
-    public UUID getLeaveTypeId() {
+    public Long getLeaveTypeId() {
         return leaveTypeId;
     }
 

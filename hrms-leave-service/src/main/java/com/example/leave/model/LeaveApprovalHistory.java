@@ -1,8 +1,8 @@
 
 package com.example.leave.model;
 
+
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,14 +17,14 @@ import jakarta.persistence.Table;
 public class LeaveApprovalHistory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "leave_request_id", nullable = false)
-    private UUID leaveRequestId;
+    private Long leaveRequestId;
 
     @Column(name = "approver_id", nullable = false)
-    private UUID approverId;
+    private Long approverId;
 
     @Column(name = "action", nullable = false, length = 20)
     private String action;
@@ -45,27 +45,27 @@ public class LeaveApprovalHistory {
         }
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public UUID getLeaveRequestId() {
+    public Long getLeaveRequestId() {
         return leaveRequestId;
     }
 
-    public void setLeaveRequestId(UUID leaveRequestId) {
+    public void setLeaveRequestId(Long leaveRequestId) {
         this.leaveRequestId = leaveRequestId;
     }
 
-    public UUID getApproverId() {
+    public Long getApproverId() {
         return approverId;
     }
 
-    public void setApproverId(UUID approverId) {
+    public void setApproverId(Long approverId) {
         this.approverId = approverId;
     }
 

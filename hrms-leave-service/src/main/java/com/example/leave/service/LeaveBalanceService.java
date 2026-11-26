@@ -1,17 +1,14 @@
-
 package com.example.leave.service;
-
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.leave.dto.LeaveBalanceResponse;
 import com.example.leave.model.LeaveBalance;
 import com.example.leave.repository.LeaveBalanceRepository;
-import com.example.leave.dto.LeaveBalanceResponse;
 
 @Service
 public class LeaveBalanceService {
@@ -25,7 +22,7 @@ public class LeaveBalanceService {
 
     // 1. Get all leave balances by employee ID
     public List<LeaveBalanceResponse> getBalancesByEmployeeId(
-            UUID employeeId) {
+            Long employeeId) {
 
         List<LeaveBalance> balances =
                 leaveBalanceRepository.findAllByEmployeeId(employeeId);
@@ -37,7 +34,7 @@ public class LeaveBalanceService {
 
     // 2. Get leave balances by employee ID and year
     public List<LeaveBalanceResponse> getBalancesByEmployeeIdAndYear(
-            UUID employeeId,
+            Long employeeId,
             Integer year) {
 
         List<LeaveBalance> balances =
@@ -52,8 +49,8 @@ public class LeaveBalanceService {
     // 3. Reserve leave balance
     @Transactional
     public void reserveBalance(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             Integer year,
             BigDecimal days) {
 
@@ -70,8 +67,8 @@ public class LeaveBalanceService {
     // 4. Confirm leave deduction
     @Transactional
     public void confirmDeduction(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             Integer year,
             BigDecimal days) {
 
@@ -88,8 +85,8 @@ public class LeaveBalanceService {
     // 5. Release reserved leave balance
     @Transactional
     public void releaseReservation(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             Integer year,
             BigDecimal days) {
 
@@ -106,8 +103,8 @@ public class LeaveBalanceService {
     // 6. Deduct leave balance
     @Transactional
     public void deductBalance(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             Integer year,
             BigDecimal days) {
 
@@ -134,8 +131,8 @@ public class LeaveBalanceService {
 
     // 7. Find leave balance
     private LeaveBalance findBalance(
-            UUID employeeId,
-            UUID leaveTypeId,
+            Long employeeId,
+            Long leaveTypeId,
             Integer year) {
 
         return leaveBalanceRepository
