@@ -6,9 +6,9 @@ spring:
     name: hrms-auth-service
 
   datasource:
-    url: jdbc:postgresql://localhost:${DB_PORT:5432}/hrms_auth_db
+    url: jdbc:postgresql://localhost:${DB_PORT:5433}/hrms_auth_db
     username: postgres
-    password: Hitesh@2001
+    password: Subha@123
 
     driver-class-name: org.postgresql.Driver
 
@@ -36,9 +36,6 @@ eureka:
 
 security:
   jwt:
-<<<<<<< Updated upstream
-    secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
-=======
-    secret: "M8dDrAhLNmE/xMi6+szGqcR+7xcNm9rxD7kDpz806LM="
->>>>>>> Stashed changes
+
+    secret: "EA1txxQbFsiEi2twwOHxvRbi2/NQkIO9hj1QvdbHnFc="
     expiration-ms: 3600000

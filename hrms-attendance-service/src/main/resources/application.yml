@@ -6,9 +6,9 @@ spring:
     name: hrms-attendance-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/hrms_attendance
+    url: jdbc:postgresql://localhost:5433/hrms_attendance
     username: postgres
-    password: Bhumi@570
+    password: Subha@123
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -48,4 +48,4 @@ management:
       show-details: always
 
 jwt:
-  secret: "M8dDrAhLNmE/xMi6+szGqcR+7xcNm9rxD7kDpz806LM="
+  secret: "EA1txxQbFsiEi2twwOHxvRbi2/NQkIO9hj1QvdbHnFc="

@@ -7,9 +7,9 @@ spring:
 
   # Leave Database Configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/hrms_leave
+    url: jdbc:postgresql://localhost:5433/hrms_leave
     username: postgres
-    password: 123456
+    password: Subha@123
     driver-class-name: org.postgresql.Driver
 
   # JPA Configuration
@@ -33,9 +33,9 @@ spring:
 # Auth Database Configuration
 auth:
   datasource:
-    url: jdbc:postgresql://localhost:5432/hrms_auth_db
+    url: jdbc:postgresql://localhost:5433/hrms_auth_db
     username: postgres
-    password: 123456
+    password: Subha@123
     driver-class-name: org.postgresql.Driver
 
 # Eureka Configuration
@@ -51,7 +51,7 @@ eureka:
 # JWT Configuration
 security:
   jwt:
-    secret: "PQX9OzNpqLm4YvxEV6IILNDkk0NNEQGrjOnzPCSKZ5Q="
+    secret: "EA1txxQbFsiEi2twwOHxvRbi2/NQkIO9hj1QvdbHnFc="
 
 # Actuator Configuration
 management:
